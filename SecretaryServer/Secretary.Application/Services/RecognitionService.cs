@@ -28,6 +28,13 @@ namespace Secretary.Application.Services
         public async Task<RecognitionResponseDTO> Recognize(RecognitionRequestDTO dto, CancellationToken cancellationToken = default)
         {
             var response = await _recognitionApi.Recognize(dto.File.ToArray(), dto.LanguageCode);
+            _dbContext.Recognitions.Add(new Domain.Recognition()
+            {
+                Transcript = response.Transcript,
+                Timestamp = DateTime.UtcNow,
+                FilePath = ""
+            });
+            await _dbContext.SaveChangesAsync(cancellationToken);
             return new RecognitionResponseDTO()
             {
                 Transcript = response.Transcript,

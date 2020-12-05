@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Secretary.Application;
 using Secretary.Application.Abstract;
 using Secretary.Application.Services;
 using Secretary.Infrastructure;
@@ -33,13 +34,14 @@ namespace Secretary.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddAutoMapper(typeof(MappingProfile));
             services.AddHttpClient();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddTransient<IRecognitionService, RecognitionService>();
+            services.AddTransient<ICrowdService, CrowdService>();
             services.AddTransient<IRecognitionApi, GoogleRecognitionApi>();
 
             services.AddSwaggerGen();

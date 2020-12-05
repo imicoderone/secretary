@@ -12,5 +12,6 @@ namespace Secretary.Infrastructure
         }
 
         public DbSet<Recognition> Recognitions { get; set; }
+        public DbSet<Crowd> Crowds { get; set; }
     }
 }

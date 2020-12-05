@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Secretary.Application.DTOs.Responses;
+using Secretary.Domain;
 using System;
 
 namespace Secretary.Application
@@ -7,7 +9,7 @@ namespace Secretary.Application
     {
         public MappingProfile()
         {
-
+            CreateMap<Crowd, CrowdResponseDTO>();
         }
     }
 }
