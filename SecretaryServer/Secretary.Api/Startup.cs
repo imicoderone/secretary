@@ -18,7 +18,6 @@ using Secretary.Application.Services;
 using Secretary.Infrastructure;
 using Secretary.Infrastructure.Abstract;
 using Secretary.Infrastructure.Apis;
-using Secretary.Infrastructure.Configuration;
 
 namespace Secretary.Api
 {
@@ -39,9 +38,6 @@ namespace Secretary.Api
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
-
-            services.Configure<GoogleApiConfiguration>(Configuration.GetSection(GoogleApiConfiguration.Key));
-            services.Configure<RecognitionApiConfiguration>(Configuration.GetSection(RecognitionApiConfiguration.Key));
 
             services.AddTransient<IRecognitionService, RecognitionService>();
             services.AddTransient<IRecognitionApi, GoogleRecognitionApi>();

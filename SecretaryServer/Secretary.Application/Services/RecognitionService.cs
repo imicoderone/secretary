@@ -28,11 +28,10 @@ namespace Secretary.Application.Services
         public async Task<RecognitionResponseDTO> Recognize(RecognitionRequestDTO dto, CancellationToken cancellationToken = default)
         {
             var response = await _recognitionApi.Recognize(dto.File.ToArray(), dto.LanguageCode);
-            var alternative = response?.Results?.FirstOrDefault()?.Alternatives?.FirstOrDefault();
             return new RecognitionResponseDTO()
             {
-                Transcript = alternative.Transcript,
-                Confidence = alternative.Confidence
+                Transcript = response.Transcript,
+                Confidence = response.Confidence,
             };
         }
     }

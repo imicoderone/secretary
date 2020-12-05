@@ -27,13 +27,13 @@ namespace Secretary.Api.Controllers
             using (var memoryStream = new MemoryStream())
             {
                 await file.CopyToAsync(memoryStream, cancellationToken);
-                await _recognitionService.Recognize(new RecognitionRequestDTO()
+                var result = await _recognitionService.Recognize(new RecognitionRequestDTO()
                 {
                     File = memoryStream,
                     LanguageCode = languageCode
                 }, cancellationToken);
+                return Ok(result);
             }
-            return Ok();
         }
     }
 }
