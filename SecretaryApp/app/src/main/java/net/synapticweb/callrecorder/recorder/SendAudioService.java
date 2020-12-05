@@ -9,6 +9,6 @@ import retrofit2.http.Part;
 
 public interface SendAudioService {
     @Multipart
-    @POST("/api")
+    @POST("/api/Recognition/Recognize")
     Call<ResponseBody> sendAudioFile(@Part MultipartBody.Part file);
 }

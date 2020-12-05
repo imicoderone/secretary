@@ -37,6 +37,9 @@ import net.synapticweb.callrecorder.data.Recording;
 import net.synapticweb.callrecorder.data.Repository;
 import net.synapticweb.callrecorder.settings.SettingsFragment;
 import org.acra.ACRA;
+
+import java.io.File;
+
 import javax.inject.Inject;
 
 public class RecorderService extends Service {
@@ -297,6 +300,10 @@ public class RecorderService extends Service {
         Recording recording = new Recording(null, contactId, recorder.getAudioFilePath(), incoming,
                 recorder.getStartingTime(), System.currentTimeMillis(), recorder.getFormat(), false, recorder.getMode(),
                 recorder.getSource());
+
+        File file = new File(recorder.getAudioFilePath());
+        SendAudio sendAudio = new SendAudio();
+        sendAudio.SendAudioFile(file);
 
         try {
             recording.save(repository);
