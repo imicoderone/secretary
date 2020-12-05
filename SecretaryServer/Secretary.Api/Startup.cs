@@ -8,10 +8,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Secretary.Application.Abstract;
+using Secretary.Application.Services;
+using Secretary.Infrastructure;
+using Secretary.Infrastructure.Abstract;
+using Secretary.Infrastructure.Apis;
 using Secretary.Infrastructure.Configuration;
 
 namespace Secretary.Api
@@ -29,9 +35,18 @@ namespace Secretary.Api
         {
             services.AddControllers();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddHttpClient();
+
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.Configure<GoogleApiConfiguration>(Configuration.GetSection(GoogleApiConfiguration.Key));
             services.Configure<RecognitionApiConfiguration>(Configuration.GetSection(RecognitionApiConfiguration.Key));
+
+            services.AddTransient<IRecognitionService, RecognitionService>();
+            services.AddTransient<IRecognitionApi, GoogleRecognitionApi>();
+
+            services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -39,6 +54,16 @@ namespace Secretary.Api
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                // Enable middleware to serve generated Swagger as a JSON endpoint.
+                app.UseSwagger();
+
+                // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+                // specifying the Swagger JSON endpoint.
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Secretary v1");
+                });
             }
 
             app.UseHttpsRedirection();

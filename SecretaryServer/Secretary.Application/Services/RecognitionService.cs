@@ -5,7 +5,9 @@ using Secretary.Infrastructure;
 using Secretary.Infrastructure.Abstract;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Secretary.Application.Services
@@ -16,17 +18,22 @@ namespace Secretary.Application.Services
         private readonly IRecognitionApi _recognitionApi;
 
         public RecognitionService(
-            ApplicationDbContext dbContext, 
+            ApplicationDbContext dbContext,
             IRecognitionApi recognitionApi)
         {
             _dbContext = dbContext;
             _recognitionApi = recognitionApi;
         }
 
-        public async Task<RecognitionResponseDTO> Recognize(RecognitionRequestDTO dto)
+        public async Task<RecognitionResponseDTO> Recognize(RecognitionRequestDTO dto, CancellationToken cancellationToken = default)
         {
-            var result = await _recognitionApi.Recognize(dto.File, dto.LanguageCode);
-            throw new NotImplementedException();
+            var response = await _recognitionApi.Recognize(dto.File.ToArray(), dto.LanguageCode);
+            var alternative = response?.Results?.FirstOrDefault()?.Alternatives?.FirstOrDefault();
+            return new RecognitionResponseDTO()
+            {
+                Transcript = alternative.Transcript,
+                Confidence = alternative.Confidence
+            };
         }
     }
 }
