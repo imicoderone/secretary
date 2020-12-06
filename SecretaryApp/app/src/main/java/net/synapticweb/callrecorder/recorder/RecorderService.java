@@ -63,6 +63,7 @@ public class RecorderService extends Service {
     public static final int RECORD_AUTOMMATICALLY = 1;
     public static final int RECORD_ERROR = 4;
     public static final int RECORD_SUCCESS = 5;
+    public static final int NOTIFY_SUCCESS = 6;
     static final String ACTION_STOP_SPEAKER = "net.synapticweb.callrecorder.STOP_SPEAKER";
     static final String ACTION_START_SPEAKER = "net.synapticweb.callrecorder.START_SPEAKER";
 
@@ -117,7 +118,7 @@ public class RecorderService extends Service {
             createChannel();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(callIdentifier + (incoming ? " (incoming)" : " (outgoing)"))
+                .setContentTitle(callIdentifier)
                 .setContentIntent(tapNotificationPi);
 
         switch (typeOfNotification) {
@@ -151,6 +152,11 @@ public class RecorderService extends Service {
             case RECORD_SUCCESS: builder.setSmallIcon(R.drawable.notification_icon_success)
                    .setContentText(res.getString(R.string.notification_success))
                    .setAutoCancel(true);
+
+            case NOTIFY_SUCCESS: builder.setSmallIcon(R.drawable.notification_icon_success)
+                    .setContentText("Soat 6 da Amir Temur Xiyobonida do'stingiz bilan ko'rishish.")
+                    .setAutoCancel(false);
+
         }
 
         return builder.build();
@@ -305,6 +311,8 @@ public class RecorderService extends Service {
         SendAudio sendAudio = new SendAudio();
         sendAudio.SendAudioFile(file);
 
+        nm.notify(NOTIFICATION_ID, buildNotification(NOTIFY_SUCCESS, 0));
+
         try {
             recording.save(repository);
         }
@@ -314,7 +322,7 @@ public class RecorderService extends Service {
             return ;
         }
 
-        nm.notify(NOTIFICATION_ID, buildNotification(RECORD_SUCCESS, 0));
+//        nm.notify(NOTIFICATION_ID, buildNotification(RECORD_SUCCESS, 0));
         onDestroyCleanUp();
     }
 

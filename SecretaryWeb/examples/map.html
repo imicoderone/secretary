@@ -3,9 +3,8 @@
 
 <head>
 	<meta charset="utf-8" />
-	<link rel="icon" type="image/png" href="../img/eco1.png">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Stepeco</title>
+	<title>Secretary</title>
 	<link href="../assets/css/material-dashboard.css?v=2.1.1" rel="stylesheet" />
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
 		name='viewport' />
@@ -23,7 +22,7 @@
 	<div class="form-group row">
 		<span class="col-2 col-form-label" style="font-weight: bold;">Sanani tanlang</span>
 		<div class="col-8">
-		  <input class="form-control" type="date" onchange='renderMap()' id="example-datetime-local-input">
+		  <input class="form-control" type="date" onchange='renderMap()' id="dateTimeInput">
 		</div>
 	  </div>
 	<div id="map"></div>
@@ -39,11 +38,15 @@
 		</script>
 
 	<script>
+		$('#dateTimeInput').on('change', function(e) {
+			renderMap(e.target.value);
+		});
+
 		var myMap;
-		function renderMap() {
+		function renderMap(date) {
 			$.ajax({
 				type: "GET",
-				url: 'http://stepeco.somee.com/api/EnvironmentRecord',
+				url: 'http://178.20.41.225:8014/api/Crowd',
 				success: function (ResData) {
 					list = [];
 					MyMap = new google.maps.Map(document.getElementById('map'), {
