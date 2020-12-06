@@ -6,17 +6,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ServiceGenerator {
 
-    private static final String BASE_URL = "http://192.168.43.114";
+    private static final String BASE_URL = "http://192.168.0.102";
+
+    private static OkHttpClient httpClient =
+            new OkHttpClient.Builder()
+            .build();
 
     private static Retrofit.Builder builder =
             new Retrofit.Builder()
+                    .client(httpClient)
                     .baseUrl(BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create());
 
     private static Retrofit retrofit = builder.build();
 
-    private static OkHttpClient.Builder httpClient =
-            new OkHttpClient.Builder();
 
     public static <S> S createService(
             Class<S> serviceClass) {
